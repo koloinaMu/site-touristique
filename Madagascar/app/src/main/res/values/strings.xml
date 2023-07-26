@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Madagascar</string>
     <string name="title">Membership Form</string>
-    <string name="name">Nom</string>
-    <string name="prenom">Prenom</string>
-    <string name="mail">Adresse e-mail</string>
-    <string name="mdp">Mot de passe</string>
+    <string name="nom">Votre nom</string>
+    <string name="prenom">Votre prénom</string>
+    <string name="mail">Votre e-mail</string>
+    <string name="mdp">Votre mot de passe</string>
 
 
 </resources>

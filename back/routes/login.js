@@ -23,7 +23,7 @@ router.post('/login', (req, res) => {
     }else{
         erreur={erreur:'Mail invalide'};
         //res.send('ok erreur');
-        res.send(erreur);
+        res.status(200).json(erreur);
     }
     
 })

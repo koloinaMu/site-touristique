@@ -3,7 +3,7 @@ package com.example.asus.madagascar;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
+import com.example.asus.madagascar.view.*;
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -14,4 +14,7 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+
+
 }

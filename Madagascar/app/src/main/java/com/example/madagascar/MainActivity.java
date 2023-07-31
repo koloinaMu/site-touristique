@@ -2,9 +2,15 @@ package com.example.madagascar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 
@@ -27,6 +33,20 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     final public UtilisateurControleur userControl=new UtilisateurControleur();
+
+    public static final String IS_DARK = "IS_DARK";
+
+    @Override
+    protected void attachBaseContext(Context baseContext) {
+        super.attachBaseContext(baseContext);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(baseContext);
+        boolean isDark = prefs.getBoolean(IS_DARK, false);
+
+        if (isDark)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

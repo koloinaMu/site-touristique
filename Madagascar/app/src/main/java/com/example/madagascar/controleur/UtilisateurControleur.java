@@ -11,6 +11,7 @@ import com.example.madagascar.MainActivity;
 import com.example.madagascar.model.Utilisateur;
 import com.example.madagascar.vue.Accueil;
 import com.example.madagascar.vue.Inscription;
+import com.example.madagascar.vue.Template;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -70,7 +71,7 @@ public class UtilisateurControleur {
                         });
                     }
                     else{
-                        Intent intent = new Intent(main.getApplicationContext(), Accueil.class);
+                        Intent intent = new Intent(main.getApplicationContext(), Template.class);
                         main.startActivity(intent);
                     }
                 }

@@ -2,6 +2,7 @@ package com.example.madagascar.controleur;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,6 +13,9 @@ import com.example.madagascar.model.Utilisateur;
 import com.example.madagascar.vue.Accueil;
 import com.example.madagascar.vue.Inscription;
 import com.example.madagascar.vue.Template;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -71,6 +75,16 @@ public class UtilisateurControleur {
                         });
                     }
                     else{
+                        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                            @Override
+                            public void onComplete(Task<String> task) {
+                                if(task.isComplete()){
+                                    String token = task.getResult();
+                                    Log.e("AppConstants", "onComplete: new Token got: "+token );
+
+                                }
+                            }
+                        });
                         Intent intent = new Intent(main.getApplicationContext(), Template.class);
                         main.startActivity(intent);
                     }

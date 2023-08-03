@@ -12,6 +12,16 @@
         android:roundIcon="@mipmap/maki_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Madagascar">
+        <service
+            android:name=".services.MessagingService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".vue.Template"
             android:exported="true" />
@@ -35,5 +45,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

@@ -16,8 +16,10 @@ import android.widget.EditText;
 
 import com.example.madagascar.controleur.UtilisateurControleur;
 import com.example.madagascar.model.Utilisateur;
+import com.example.madagascar.services.MessagingService;
 import com.example.madagascar.vue.Accueil;
 import com.example.madagascar.vue.Inscription;
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        System.out.println(MessagingService.getToken(baseContext));
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
         setContentView(R.layout.activity_main);
-
+        //FirebaseApp.initializeApp(this);
     }
 
     public void submitbuttonHandler(View view) throws Exception {

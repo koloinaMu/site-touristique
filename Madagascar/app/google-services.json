@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "436744834381",
+    "firebase_url": "https://sitetouristique-35790-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sitetouristique-35790",
+    "storage_bucket": "sitetouristique-35790.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:436744834381:android:dd0d7f346f23d1f54bbb04",
+        "android_client_info": {
+          "package_name": "com.example.madagascar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "436744834381-ltgsbtu3ca42spmrbvl6moica7mn123k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbTRKznxgbWsQlJ5FLbR0-rXP37j0t3x0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "436744834381-ltgsbtu3ca42spmrbvl6moica7mn123k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

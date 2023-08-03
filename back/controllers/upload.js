@@ -1,6 +1,8 @@
 const upload = require("../middleware/upload");
 const dbConfig = require("../config/db");
 const Site=require('../models/site');
+var formidable = require('formidable');
+const fs = require('fs')
 
 const MongoClient = require("mongodb").MongoClient;
 const GridFSBucket = require("mongodb").GridFSBucket;
@@ -12,64 +14,41 @@ const baseUrl = "http://localhost:3000/files/";
 const mongoClient = new MongoClient(url);
 
 const uploadFiles = async (req, res) => {
-  try {
-    await upload(req, res);
-    //console.log(req.files);
-
-    if (req.files.length <= 0) {
-      return res
-        .status(400)
-        .send({ message: "You must select at least 1 file." });
-    }
-    //console.log(req)
+  console.log("INSIDE THIS")
+  
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        //console.log(fields)
+        //console.log(files.file)
+        const fileUp=files.file
+        var b64=[]
+        for (f in fileUp){
+          //console.log(fileUp[f])
+          const filePath = fileUp[f].filepath;
+          const bitmap = fs.readFileSync(filePath);
+          // convert the binary data to base64 encoded string
+          var b= bitmap.toString('base64');
+          b64.push(b)
+        }
+        //console.log(fields.nom[0])
+        const site=new Site({
+          nom:fields.nom[0],
+          description:fields.description[0],
+          region:fields.region[0],
+          files:b64
+        })
+        site.save()
+            .then(() => res.status(201).json({ message: 'Site enregistré !'}))
+            .catch(error => res.status(400).json({ error }));
+        
+    });
     //console.log('req body')
-    //console.log(req.files)
+    //console.log(req)
     var ids=[]
     for (f in req.files){
       //console.log(f)
       ids.push(req.files[f].id)
     }
-    //console.log(ids)
-    const site = new Site({
-      nom: req.body.nom,
-      description: req.body.description,
-      region: req.body.region,
-      // Grab the file id that was stored in the database by the storage engine as the reference to your file
-      fileId: ids
-    })
-    //console.log(site)
-    site.save()
-    return res.status(200).send({
-      message: "Files have been uploaded.",
-    });
-
-    // console.log(req.file);
-
-    // if (req.file == undefined) {
-    //   return res.send({
-    //     message: "You must select a file.",
-    //   });
-    // }
-
-    // return res.send({
-    //   message: "File has been uploaded.",
-    // });
-  } catch (error) {
-    console.log(error);
-
-    if (error.code === "LIMIT_UNEXPECTED_FILE") {
-      return res.status(400).send({
-        message: "Too many files to upload.",
-      });
-    }
-    return res.status(500).send({
-      message: `Error when trying upload many files: ${error}`,
-    });
-
-    // return res.send({
-    //   message: "Error when trying upload image: ${error}",
-    // });
-  }
 };
 
 

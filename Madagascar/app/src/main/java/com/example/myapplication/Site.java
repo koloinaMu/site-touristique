@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import org.w3c.dom.Text;
-
 class Site {
    private int id;
    private String nom;
@@ -10,7 +8,8 @@ class Site {
    private int idMedia;
    private String urlMedia;
    private String descriptionMedia;
-   private String typeMedia;
+   private String urlVideo;
+   
    private String imagePosteur;
 
    public int getId() {
@@ -77,15 +76,15 @@ class Site {
       this.imagePosteur = imagePosteur;
    }
 
-   public String getTypeMedia() {
-      return typeMedia;
+   public String getUrlVideo() {
+      return urlVideo;
    }
 
-   public void setTypeMedia(String typeMedia) {
-      this.typeMedia = typeMedia;
+   public void setUrlVideo(String urlVideo) {
+      this.urlVideo = urlVideo;
    }
 
-   public Site(int id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String typeMedia) {
+   public Site(int id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
       this.id = id;
       this.nom = nom;
       this.description = description;
@@ -93,25 +92,26 @@ class Site {
       this.idMedia = idMedia;
       this.urlMedia = urlMedia;
       this.descriptionMedia = descriptionMedia;
-      this.typeMedia = typeMedia;
+      this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String typeMedia) {
+   public Site(String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
       this.nom = nom;
       this.description = description;
       this.region = region;
       this.idMedia = idMedia;
       this.urlMedia = urlMedia;
       this.descriptionMedia = descriptionMedia;
-      this.typeMedia = typeMedia;
+      this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, String urlMedia, String imagePosteur) {
+   public Site(String nom, String description, String region, String urlMedia, String imagePosteur,String urlVideo) {
       this.nom = nom;
       this.description = description;
       this.region = region;
       this.urlMedia = urlMedia;
       this.imagePosteur = imagePosteur;
+      this.urlVideo = urlVideo;
    }
 
    public Site(String nom, String description) {

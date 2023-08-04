@@ -42,11 +42,16 @@
 
     <ImageView
         android:id="@+id/popup_imageView_add"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
-
+    <VideoView
+        android:id="@+id/popup_videoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
 
 </LinearLayout>

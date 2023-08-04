@@ -21,7 +21,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ImageView;
+import android.widget.VideoView;
 import android.view.View;
+import android.net.Uri;
 import android.graphics.drawable.Drawable;
 import java.io.InputStream;
 public class SiteActivity extends AppCompatActivity {
@@ -73,8 +75,8 @@ public class SiteActivity extends AppCompatActivity {
                             JSONArray mediaArray = jsonObject.getJSONArray("media");
                             JSONObject mediaObject = mediaArray.getJSONObject(0); // Assuming there's only one media object
                             String imageUrlMedia = mediaObject.getString("urlMedia");
-
-                            Site siteData = new Site(siteName, siteDescription,region,imagePosteur,imageUrlMedia);
+                            String urlVideo=mediaObject.getString("urlVideo");
+                            Site siteData = new Site(siteName, siteDescription,region,imagePosteur,imageUrlMedia,urlVideo);
                             siteDataList.add(siteData);
                         }
                         SiteActivity.this.runOnUiThread(new Runnable() {
@@ -107,7 +109,7 @@ public class SiteActivity extends AppCompatActivity {
         TextView popupDescriptionTextView = dialog.findViewById(R.id.popup_description_textView);
         TextView popup_region_textView= dialog.findViewById(R.id.popup_region_textView);
         ImageView popupImageView = dialog.findViewById(R.id.popup_imageView);
-
+        VideoView popupVideoView = dialog.findViewById(R.id.popup_videoView);
         ImageView popup_imageView_add = dialog.findViewById(R.id.popup_imageView_add);
 
 
@@ -120,7 +122,15 @@ public class SiteActivity extends AppCompatActivity {
         if (popupDescriptionTextView != null) {
             popupDescriptionTextView.setText(siteData.getDescription());
         }
+        if (popupVideoView != null) {
+            // Set the video URL to the VideoView
+            String videoUrl = siteData.getUrlVideo();
+            Uri videoUri = Uri.parse(videoUrl);
+            popupVideoView.setVideoURI(videoUri);
+            popupVideoView.start();
 
+
+        }
         if (popupImageView != null) {
             // Load the image dynamically using the imageSourceId from SiteData
             String imageSourceId = siteData.getImagePosteur();

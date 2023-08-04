@@ -7,7 +7,10 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
@@ -25,6 +28,8 @@ import com.example.madagascar.vue.Inscription;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,11 +59,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(Task<String> task) {
                 Log.d("MAIN",task.getResult().toString());
-
-                WorkRequest myWorkRequest = OneTimeWorkRequest.from(NotificationService.class);
+                int minute=480;
+                Constraints myConstraints = new Constraints.Builder()
+                        .setRequiresCharging(true)
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+                WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(NotificationService.class)
+                        .setConstraints(myConstraints)
+                        .build();
                 WorkManager
                         .getInstance(getApplicationContext())
                         .enqueue(myWorkRequest);
+
+                /*PeriodicWorkRequest saveRequest =
+                        new PeriodicWorkRequest.Builder(NotificationService.class, minute, TimeUnit.MINUTES)
+                                .setConstraints(myConstraints)
+                                .build();
+                WorkManager
+                        .getInstance(getApplicationContext())
+                        .enqueue(saveRequest);*/
             }
         });
     }

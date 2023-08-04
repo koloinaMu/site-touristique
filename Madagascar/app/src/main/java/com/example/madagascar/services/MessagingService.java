@@ -108,6 +108,14 @@ public class MessagingService extends FirebaseMessagingService {
         return context.getSharedPreferences("_", MODE_PRIVATE).getString("fcm_token", "empty");
     }
 
+    public static int getNotificationId(Context context){
+        int result=0;
+        if(context.getSharedPreferences("_",MODE_PRIVATE).contains("not_id")){
+            result=context.getSharedPreferences("_",MODE_PRIVATE).getInt("not_id",0);
+        }
+        return result;
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //System.out.println("RECCEEEEEIIIIIIIVVVVVEEEEDDDD");
@@ -134,7 +142,9 @@ public class MessagingService extends FirebaseMessagingService {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
 // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(2, builder.build());
+            int idCurrent=getNotificationId(getApplicationContext())+1;
+            notificationManager.notify(idCurrent, builder.build());
+            getSharedPreferences("_", MODE_PRIVATE).edit().putInt("not_id", idCurrent).apply();
 
 
         } else {

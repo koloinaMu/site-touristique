@@ -1,11 +1,18 @@
 package com.example.madagascar.services;
 
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -15,6 +22,7 @@ import com.example.madagascar.vue.Template;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -65,6 +73,21 @@ public class NotificationService extends Worker {
             }
         }
         );
+        int minute=480;
+        if(getApplicationContext().getSharedPreferences("_",MODE_PRIVATE).contains("preferedMinutes")){
+            minute=getApplicationContext().getSharedPreferences("_",MODE_PRIVATE).getInt("preferedMinutes",0);
+        }
+        Constraints myConstraints = new Constraints.Builder()
+                .setRequiresCharging(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(NotificationService.class)
+                .setInitialDelay(minute, TimeUnit.MINUTES)
+                .setConstraints(myConstraints)
+                .build();
+        WorkManager
+                .getInstance(getApplicationContext())
+                .enqueue(myWorkRequest);
         return Result.success();
     }
 }

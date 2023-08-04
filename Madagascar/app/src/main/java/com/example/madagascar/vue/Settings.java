@@ -5,16 +5,23 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.EditText;
 
 import com.example.madagascar.R;
+import com.example.madagascar.services.NotificationService;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,16 +42,9 @@ public class Settings extends Fragment {
         // Inflate the layout for this fragment
         System.out.println(AppCompatDelegate.getDefaultNightMode());
         View rootView=inflater.inflate(R.layout.fragment_settings, container, false);
-        Switch switchtheme=rootView.findViewById(R.id.switchtheme);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getContext());
 
-        switchtheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                prefs.edit().putBoolean(IS_DARK, true).apply();
-            }
-        });
+
         return rootView;
     }
+
 }

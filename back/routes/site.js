@@ -92,26 +92,7 @@ router.post('/firebase',  (req, res)=>{
 
     //console.log(req.body.token)        
     var registrationToken="egN32YgtRyKjUJaZ-Zrqs9:APA91bEoX9MGS952TeHJyqKhpaL_jUz1-2TJx1LH-yN47_M1iI6qIlMfqXTyJkW0OPOh9AzTnH8uVf4MevgOWXRrihMgGV8UTXXo5oK0BjQoVW5DpLAtjRcme16WgFZXamVU4C0BxdMI";
-    /*if(req.body.token!=undefined)
-        registrationToken=req.body.token;
-    const message = {        
-        notification: {            
-            title: "Avez-vous deja visite?",            
-            body: 'site[0].nom '       
-        },              
-        data: req.body.data  || {}    
-    };
-    const options =  notification_options
-    //console.log(message)
-    console.log(options)
-    admin.messaging().sendToDevice(registrationToken, message, options)
-    .then( response => {
-
-        res.status(200).send("Notification sent successfully")
     
-    }).catch(error=>{
-        res.status(400).send(error)
-    })*/
     registrationToken=req.body.token;
     Site.aggregate([{$sample: {size: 1}}])
     .then(site =>{

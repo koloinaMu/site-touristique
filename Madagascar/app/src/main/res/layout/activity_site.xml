@@ -5,35 +5,31 @@
     android:id="@+id/listeSite"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="10dp"
     tools:context=".SiteActivity">
-
-    <ListView
-        android:id="@+id/listeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/textView4"
-        android:layout_marginTop="20dp" />
-
-
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textView4"
-        android:layout_centerInParent="true"
-        android:text="TextView" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="110dp"
+        android:layout_gravity="center"
         android:layout_marginTop="40dp"
+        android:layout_weight="1"
         android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:background="@color/design_default_color_background"
+        android:autoSizeMaxTextSize="@android:dimen/app_icon_size"
         android:text="LISTES DES SITES TOURISTIQUES"
-        android:textColor="@color/design_default_color_primary"
+        android:textColor="#16751A"
         android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/listeView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1" />
+
 
 </LinearLayout>

@@ -15,21 +15,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.widget.ArrayAdapter;
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ImageView;
+import android.view.View;
+import android.graphics.drawable.Drawable;
+import java.io.InputStream;
 public class SiteActivity extends AppCompatActivity {
     private ListView listView;
     private List<Site> siteDataList;
-    private ArrayAdapter<Site> adapter;
+    private CustomSiteDataAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site);
 
+
+
         listView = findViewById(R.id.listeView);
+
+
         siteDataList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, R.layout.list_item_layout, siteDataList);
+        adapter = new CustomSiteDataAdapter(this, R.layout.list_item_layout, siteDataList);
         listView.setAdapter(adapter);
+
 
         OkHttpClient client = new OkHttpClient();
         String url = "http://10.0.2.2:3000/sites";
@@ -68,5 +81,45 @@ public class SiteActivity extends AppCompatActivity {
                 }
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showPopup(siteDataList.get(position));
+            }
+        });
     }
+    private void showPopup(Site siteData) {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.popup_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        // Set data to the popup views
+        TextView popupNameTextView = dialog.findViewById(R.id.popup_name_textView);
+        TextView popupDescriptionTextView = dialog.findViewById(R.id.popup_description_textView);
+        ImageView popupImageView = dialog.findViewById(R.id.popup_imageView);
+
+        if (popupNameTextView != null) {
+            popupNameTextView.setText(siteData.getNom());
+        }
+
+        if (popupDescriptionTextView != null) {
+            popupDescriptionTextView.setText(siteData.getDescription());
+        }
+
+        if (popupImageView != null) {
+            // Load the image dynamically using the imageSourceId from SiteData
+            String imageSourceId = siteData.getImagePosteur();
+            try {
+                InputStream inputStream = getAssets().open("images/" + imageSourceId);
+                Drawable drawable = Drawable.createFromStream(inputStream, null);
+                popupImageView.setImageDrawable(drawable);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dialog.show();
+    }
+
 }

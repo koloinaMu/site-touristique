@@ -11,6 +11,7 @@ class Site {
    private String urlMedia;
    private String descriptionMedia;
    private String typeMedia;
+   private String imagePosteur;
 
    public int getId() {
       return id;
@@ -68,6 +69,14 @@ class Site {
       this.descriptionMedia = descriptionMedia;
    }
 
+   public String getImagePosteur() {
+      return imagePosteur;
+   }
+
+   public void setImagePosteur(String imagePosteur) {
+      this.imagePosteur = imagePosteur;
+   }
+
    public String getTypeMedia() {
       return typeMedia;
    }
@@ -101,4 +110,16 @@ class Site {
       this.nom = nom;
       this.description = description;
    }
+
+   public Site(String nom, String description, String imagePosteur) {
+      this.nom = nom;
+      this.description = description;
+      this.imagePosteur = imagePosteur;
+   }
+
+   @Override
+    public String toString() {
+        return nom;
+        // The ArrayAdapter will use this method to get the string representation for each item in the list
+    }
 }

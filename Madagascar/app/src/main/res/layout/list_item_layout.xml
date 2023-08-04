@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
 
+    <ImageView
+        android:id="@+id/image_site"
+        android:layout_width="346dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:elevation="5dp"
+        android:src="@drawable/diego" />
+
     <TextView
         android:id="@+id/site_name_textView"
-        android:layout_width="match_parent"
+        android:layout_width="384dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
+        android:layout_margin="5dp"
+        android:text="Nom Site"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        />
+
 
     <TextView
         android:id="@+id/site_description_textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray" />
+        android:layout_height="38dp"
+        android:layout_margin="5dp"
+        android:text="region Site"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+
+        />
 
 </LinearLayout>
+

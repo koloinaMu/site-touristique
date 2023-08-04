@@ -7,34 +7,28 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.madagascar.controleur.UtilisateurControleur;
-import com.example.madagascar.model.Utilisateur;
 import com.example.madagascar.services.MessagingService;
-import com.example.madagascar.vue.Accueil;
+import com.example.madagascar.services.NotificationService;
 import com.example.madagascar.vue.Inscription;
-import com.google.firebase.FirebaseApp;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
-    final public UtilisateurControleur userControl=new UtilisateurControleur();
+    private UtilisateurControleur userControl=new UtilisateurControleur();
 
     public static final String IS_DARK = "IS_DARK";
 
@@ -56,17 +50,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
         setContentView(R.layout.activity_main);
-        //FirebaseApp.initializeApp(this);
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(Task<String> task) {
+                Log.d("MAIN",task.getResult().toString());
+
+                WorkRequest myWorkRequest = OneTimeWorkRequest.from(NotificationService.class);
+                WorkManager
+                        .getInstance(getApplicationContext())
+                        .enqueue(myWorkRequest);
+            }
+        });
     }
 
     public void submitbuttonHandler(View view) throws Exception {
         //Decide what happens when the user clicks the submit button
         EditText mailEditText = (EditText) findViewById(R.id.mail);
         EditText mdpEditText = (EditText) findViewById(R.id.mdp);
+        userControl.setCurrentActivity(getApplicationContext());
         userControl.login(mailEditText,mdpEditText,this);
     }
 
     public void inscription(View view) throws Exception {
+        userControl.setCurrentActivity(getApplicationContext());
         Intent intent = new Intent(this, Inscription.class);
         startActivity(intent);
     }

@@ -23,10 +23,10 @@ public class Template extends AppCompatActivity implements BottomNavigationView
 
         bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.notifications);
+        bottomNavigationView.setSelectedItemId(R.id.home);
     }
     Settings sett=new Settings();
-    Notifications nott=new Notifications();
+    Accueil accueil=new Accueil();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -38,10 +38,10 @@ public class Template extends AppCompatActivity implements BottomNavigationView
                         .commit();
                 return true;
 
-            case R.id.notifications:
+            case R.id.home:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.flFragment, nott)
+                        .replace(R.id.flFragment, accueil)
                         .commit();
                 return true;
 

@@ -15,8 +15,7 @@
         <service
             android:name=".services.MessagingService"
             android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -32,9 +31,6 @@
             android:name=".vue.Inscription"
             android:exported="true" />
         <activity
-            android:name=".vue.Accueil"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppSplash">
@@ -44,6 +40,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_nofitications_foreground" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
     </application>
 
 

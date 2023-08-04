@@ -38,7 +38,7 @@ public class Inscription extends AppCompatActivity {
         EditText prenomEditText = (EditText) findViewById(R.id.prenom);
         EditText mailEditText = (EditText) findViewById(R.id.mail);
         EditText mdpEditText = (EditText) findViewById(R.id.mdp);
-        UtilisateurControleur userControl=new UtilisateurControleur();
+        UtilisateurControleur userControl=new UtilisateurControleur(this);
         userControl.inscrire(nomEditText,prenomEditText,mailEditText,mdpEditText,this);
     }
 

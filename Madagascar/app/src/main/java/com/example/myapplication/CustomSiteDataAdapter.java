@@ -43,15 +43,23 @@ class CustomSiteDataAdapter extends ArrayAdapter<Site> {
             if (siteDescriptionTextView != null) {
                 siteDescriptionTextView.setText(siteData.getDescription());
             }
+
+            /*if (siteImageView != null) {
+                // Load the image using Picasso and the image URL from SiteData
+                String imageSourceUrl = siteData.getImagePosteur();
+                Picasso.get().load(imageSourceUrl).into(siteImageView);
+            } */
             if (siteImageView != null) {
-                // Load the image dynamically using the imageSourceId from SiteData
                 String imageSourceId = siteData.getImagePosteur();
-                System.out.println("io le lien"+imageSourceId);
-                String imageSource = imageSourceId;
-                Picasso.get().load(imageSource).into(siteImageView);
-
-
+                try {
+                    InputStream inputStream = mContext.getAssets().open("images/" + imageSourceId);
+                    Drawable drawable = Drawable.createFromStream(inputStream, null);
+                    siteImageView.setImageDrawable(drawable);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
 
         }
 

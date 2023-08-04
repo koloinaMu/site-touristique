@@ -41,6 +41,7 @@ public class SiteActivity extends AppCompatActivity {
 
         siteDataList = new ArrayList<>();
         adapter = new CustomSiteDataAdapter(this, R.layout.list_item_layout, siteDataList);
+
         listView.setAdapter(adapter);
 
 
@@ -65,8 +66,15 @@ public class SiteActivity extends AppCompatActivity {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             String siteName = jsonObject.getString("nom");
                             String siteDescription = jsonObject.getString("description");
+                            String region = jsonObject.getString("region");
+                            String imagePosteur = jsonObject.getString("imagePosteur");
+                            //atribut dans media
 
-                            Site siteData = new Site(siteName, siteDescription);
+                            JSONArray mediaArray = jsonObject.getJSONArray("media");
+                            JSONObject mediaObject = mediaArray.getJSONObject(0); // Assuming there's only one media object
+                            String imageUrlMedia = mediaObject.getString("urlMedia");
+
+                            Site siteData = new Site(siteName, siteDescription,region,imagePosteur,imageUrlMedia);
                             siteDataList.add(siteData);
                         }
                         SiteActivity.this.runOnUiThread(new Runnable() {
@@ -97,12 +105,18 @@ public class SiteActivity extends AppCompatActivity {
         // Set data to the popup views
         TextView popupNameTextView = dialog.findViewById(R.id.popup_name_textView);
         TextView popupDescriptionTextView = dialog.findViewById(R.id.popup_description_textView);
+        TextView popup_region_textView= dialog.findViewById(R.id.popup_region_textView);
         ImageView popupImageView = dialog.findViewById(R.id.popup_imageView);
+
+        ImageView popup_imageView_add = dialog.findViewById(R.id.popup_imageView_add);
+
 
         if (popupNameTextView != null) {
             popupNameTextView.setText(siteData.getNom());
         }
-
+        if (popup_region_textView != null) {
+            popup_region_textView.setText(siteData.getRegion());
+        }
         if (popupDescriptionTextView != null) {
             popupDescriptionTextView.setText(siteData.getDescription());
         }
@@ -118,6 +132,19 @@ public class SiteActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        if (popup_imageView_add != null) {
+            // Load the image dynamically using the imageSourceId from SiteData
+            String imageSourceId = siteData.getUrlMedia();
+            try {
+                InputStream inputStream = getAssets().open("images/" + imageSourceId);
+                Drawable drawable = Drawable.createFromStream(inputStream, null);
+                popup_imageView_add.setImageDrawable(drawable);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         dialog.show();
     }

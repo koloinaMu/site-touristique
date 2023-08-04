@@ -106,6 +106,14 @@ class Site {
       this.typeMedia = typeMedia;
    }
 
+   public Site(String nom, String description, String region, String urlMedia, String imagePosteur) {
+      this.nom = nom;
+      this.description = description;
+      this.region = region;
+      this.urlMedia = urlMedia;
+      this.imagePosteur = imagePosteur;
+   }
+
    public Site(String nom, String description) {
       this.nom = nom;
       this.description = description;

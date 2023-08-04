@@ -11,7 +11,7 @@
         android:layout_height="100dp"
         android:layout_margin="5dp"
         android:elevation="5dp"
-        android:src="@drawable/diego" />
+         />
 
     <TextView
         android:id="@+id/site_name_textView"

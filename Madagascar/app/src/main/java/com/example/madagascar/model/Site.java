@@ -1,23 +1,22 @@
 package com.example.madagascar.model;
 
-import org.w3c.dom.Text;
-
 public class Site {
-   private String id;
+   private int id;
    private String nom;
    private String description;
    private String region;
    private int idMedia;
    private String urlMedia;
    private String descriptionMedia;
-   private String typeMedia;
+   private String urlVideo;
+   
    private String imagePosteur;
 
-   public String getId() {
+   public int getId() {
       return id;
    }
 
-   public void setId(String id) {
+   public void setId(int id) {
       this.id = id;
    }
 
@@ -77,15 +76,15 @@ public class Site {
       this.imagePosteur = imagePosteur;
    }
 
-   public String getTypeMedia() {
-      return typeMedia;
+   public String getUrlVideo() {
+      return urlVideo;
    }
 
-   public void setTypeMedia(String typeMedia) {
-      this.typeMedia = typeMedia;
+   public void setUrlVideo(String urlVideo) {
+      this.urlVideo = urlVideo;
    }
 
-   public Site(String id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String typeMedia) {
+   public Site(int id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
       this.id = id;
       this.nom = nom;
       this.description = description;
@@ -93,17 +92,26 @@ public class Site {
       this.idMedia = idMedia;
       this.urlMedia = urlMedia;
       this.descriptionMedia = descriptionMedia;
-      this.typeMedia = typeMedia;
+      this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String typeMedia) {
+   public Site(String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo) {
       this.nom = nom;
       this.description = description;
       this.region = region;
-      this.idMedia = idMedia;
       this.urlMedia = urlMedia;
       this.descriptionMedia = descriptionMedia;
-      this.typeMedia = typeMedia;
+      this.urlVideo = urlVideo;
+   }
+
+   public Site(String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo, String imagePosteur) {
+      this.nom = nom;
+      this.description = description;
+      this.region = region;
+      this.urlMedia = urlMedia;
+      this.descriptionMedia = descriptionMedia;
+      this.urlVideo = urlVideo;
+      this.imagePosteur = imagePosteur;
    }
 
    public Site(String nom, String description) {
@@ -117,16 +125,9 @@ public class Site {
       this.imagePosteur = imagePosteur;
    }
 
-   public Site() {
-   }
-
    @Override
-   public String toString() {
-      return "Site{" +
-              "id=" + id +
-              ", nom='" + nom + '\'' +
-              ", description='" + description + '\'' +
-              ", region='" + region + '\'' +
-              '}';
-   }
+    public String toString() {
+        return nom;
+        // The ArrayAdapter will use this method to get the string representation for each item in the list
+    }
 }

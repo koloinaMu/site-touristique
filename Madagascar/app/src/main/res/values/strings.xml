@@ -1,5 +1,4 @@
 <resources>
-<<<<<<< HEAD
     <string name="app_name">Madagascar</string>
     <string name="title">Membership Form</string>
     <string name="nom">Votre nom</string>
@@ -10,7 +9,4 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="apiUrl">http://192.168.88.10:3000/</string>
 
-=======
-    <string name="app_name">My Application</string>
->>>>>>> dev_sedra
 </resources>

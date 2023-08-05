@@ -4,8 +4,8 @@ const siteSchema = mongoose.Schema( {
     nom: String,
     description: String,
     region: String,
-    files:[]
-    //fileId: [] //mongoose.Schema.Types.ObjectId
+    imagePosteur: String,
+    media:[]
 });
 
 module.exports=mongoose.model('Site', siteSchema);

@@ -1,100 +1,111 @@
 package com.example.madagascar.vue;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import android.os.Bundle;
+import android.widget.TextView;
+import java.util.*;
+import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.VideoView;
+import android.view.View;
+import android.net.Uri;
+import android.graphics.drawable.Drawable;
+import java.io.InputStream;
+import android.widget.Button;
 
 import com.example.madagascar.R;
 import com.example.madagascar.model.Site;
-import com.example.madagascar.services.NotificationService;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
 
-public class Template extends AppCompatActivity implements BottomNavigationView
-        .OnNavigationItemSelectedListener {
-
-    BottomNavigationView bottomNavigationView;
+public class SiteActivity extends AppCompatActivity {
+    private ListView listView;
+    private List<Site> siteDataList;
+    private CustomSiteDataAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_template);
-        bottomNavigationView
-                = findViewById(R.id.bottomNavigationView);
+        setContentView(R.layout.activity_site);
 
-        bottomNavigationView
-                .setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-    }
-    Settings sett=new Settings();
-    Accueil accueil=new Accueil();
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, sett)
-                        .commit();
-                return true;
 
-            case R.id.home:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, accueil)
-                        .commit();
-                return true;
+        listView = findViewById(R.id.listeView);
 
-        }
-        return false;
-    }
 
-    public void setPreferedHour(View view) throws Exception{
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        EditText minuteEdit= view.findViewById(R.id.minute);
-        int minute = Integer.parseInt(minuteEdit.getText().toString());
-        Constraints myConstraints = new Constraints.Builder()
-                .setRequiresCharging(true)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+        siteDataList = new ArrayList<>();
+        adapter = new CustomSiteDataAdapter(this, R.layout.list_item_layout, siteDataList);
+
+        listView.setAdapter(adapter);
+
+
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://10.0.2.2:3000/sites";
+        Request request = new Request.Builder()
+                .url(url)
                 .build();
-        WorkRequest myWorkRequest = new OneTimeWorkRequest.Builder(NotificationService.class)
-                .setConstraints(myConstraints)
-                .build();
-        WorkManager
-                .getInstance(getApplicationContext())
-                .enqueue(myWorkRequest);
-        getSharedPreferences("_", MODE_PRIVATE).edit().putInt("preferedMinutes", minute).apply();
-        System.out.println(WorkManager.getInstance(view.getContext()));
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myresponse = response.body().string();
+                    try {
+                        JSONArray jsonArray = new JSONArray(myresponse);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String siteName = jsonObject.getString("nom");
+                            String siteDescription = jsonObject.getString("description");
+                            String region = jsonObject.getString("region");
+                            String imagePosteur = jsonObject.getString("imagePosteur");
+                            //atribut dans media
+
+                            JSONArray mediaArray = jsonObject.getJSONArray("media");
+                            JSONObject mediaObject = mediaArray.getJSONObject(0); // Assuming there's only one media object
+                            String imageUrlMedia = mediaObject.getString("urlMedia");
+                            String urlVideo=mediaObject.getString("urlVideo");
+                            String descriptionMedia=mediaObject.getString("descriptionMedia");
+                            Site siteData = new Site(siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
+                            siteDataList.add(siteData);
+                        }
+                        SiteActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showPopup(siteDataList.get(position));
+            }
+        });
     }
-
-    public void showPopup(Site siteData) {
+    private void showPopup(Site siteData) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup_layout);
@@ -192,4 +203,5 @@ public class Template extends AppCompatActivity implements BottomNavigationView
 
         dialog.show();
     }
+
 }

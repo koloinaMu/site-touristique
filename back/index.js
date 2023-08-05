@@ -7,11 +7,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var mongo = require('mongodb');
 const uri =
-"mongodb://127.0.0.1:27017/sitetouristique";
+//"mongodb://127.0.0.1:27017/sitetouristique";
+"mongodb+srv://Koloina:Kokoloina.2422@cluster0.6vrux.mongodb.net/?retryWrites=true&w=majority";
 var md5=require("md5");
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000 
 
 const dbConfig = require("./config/db");
 const url=dbConfig.url + dbConfig.database
@@ -25,7 +26,7 @@ mongoose.connect(url,
 
 const loginRouter=require('./routes/login')
 const sitesRouter=require('./routes/site')
-const homeController = require("./controllers/home");
+//const homeController = require("./controllers/home");
 const uploadController = require("./controllers/upload");
 
 
@@ -47,23 +48,20 @@ app.use(function(req, res, next) {
 /*app.get('/', (req, res) => {
   res.send('Hello World!')
 })*/
-app.get("/", homeController.getHome);
+//app.get("/", homeController.getHome);
 app.post("/upload", uploadController.uploadFiles);
 app.get("/files", uploadController.getListFiles);
-app.get("/files/:name", uploadController.download);
 app.use('/user',loginRouter);
 app.use('/site',sitesRouter);
 
-var jsonParser = bodyParser.json();
 var MongoClient=mongo.MongoClient;
  
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get('/sites',function(req,res) {
 	MongoClient.connect(uri,function (err,db) {
 		if(err) throw err;
 		var dbo=db.db("sitetouristique");
-		dbo.collection("site").find({}).toArray(function (err,ress) {
+		dbo.collection("sites").find({}).toArray(function (err,ress) {
 			db.close();
 			res.send(ress);
 		})
@@ -79,8 +77,8 @@ app.get('/details_site/:id',function(req,res) {
 		var myquery = { _id: new mongo.ObjectId(id) };
 		var dbo=db.db("sitetouristique");
 	
-		dbo.collection("site").find(myquery).toArray(function (err,ress) {
-			console.log(query);
+		dbo.collection("sites").find(myquery).toArray(function (err,ress) {
+			//console.log(query);
 			db.close();			
 			res.send(ress);
 		});

@@ -9,20 +9,15 @@
     android:padding="10dp"
     tools:context=".SiteActivity">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="110dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:layout_weight="1"
-        android:fontFamily="sans-serif-condensed"
-        android:textStyle="bold"
-        android:background="@color/design_default_color_background"
-        android:autoSizeMaxTextSize="@android:dimen/app_icon_size"
-        android:text="LISTES DES SITES TOURISTIQUES"
-        android:textColor="#16751A"
-        android:textSize="20sp" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ListView
         android:id="@+id/listeView"

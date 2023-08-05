@@ -95,23 +95,23 @@ class Site {
       this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
+   public Site(String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo) {
       this.nom = nom;
       this.description = description;
       this.region = region;
-      this.idMedia = idMedia;
       this.urlMedia = urlMedia;
       this.descriptionMedia = descriptionMedia;
       this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, String urlMedia, String imagePosteur,String urlVideo) {
+   public Site(String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo, String imagePosteur) {
       this.nom = nom;
       this.description = description;
       this.region = region;
       this.urlMedia = urlMedia;
-      this.imagePosteur = imagePosteur;
+      this.descriptionMedia = descriptionMedia;
       this.urlVideo = urlVideo;
+      this.imagePosteur = imagePosteur;
    }
 
    public Site(String nom, String description) {

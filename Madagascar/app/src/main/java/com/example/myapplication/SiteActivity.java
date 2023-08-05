@@ -26,6 +26,8 @@ import android.view.View;
 import android.net.Uri;
 import android.graphics.drawable.Drawable;
 import java.io.InputStream;
+import android.widget.Button;
+import android.widget.SearchView;
 public class SiteActivity extends AppCompatActivity {
     private ListView listView;
     private List<Site> siteDataList;
@@ -76,7 +78,8 @@ public class SiteActivity extends AppCompatActivity {
                             JSONObject mediaObject = mediaArray.getJSONObject(0); // Assuming there's only one media object
                             String imageUrlMedia = mediaObject.getString("urlMedia");
                             String urlVideo=mediaObject.getString("urlVideo");
-                            Site siteData = new Site(siteName, siteDescription,region,imagePosteur,imageUrlMedia,urlVideo);
+                            String descriptionMedia=mediaObject.getString("descriptionMedia");
+                            Site siteData = new Site(siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
                             siteDataList.add(siteData);
                         }
                         SiteActivity.this.runOnUiThread(new Runnable() {
@@ -120,7 +123,7 @@ public class SiteActivity extends AppCompatActivity {
             popup_region_textView.setText(siteData.getRegion());
         }
         if (popupDescriptionTextView != null) {
-            popupDescriptionTextView.setText(siteData.getDescription());
+            popupDescriptionTextView.setText(siteData.getDescriptionMedia());
         }
         if (popupVideoView != null) {
             popupVideoView.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +136,41 @@ public class SiteActivity extends AppCompatActivity {
                 }
             });
         }
+        Button pauseButton = dialog.findViewById(R.id.pause_button);
+        Button forwardButton = dialog.findViewById(R.id.forward_button);
+        Button playButton = dialog.findViewById(R.id.play_button);
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (popupVideoView.isPlaying()) {
+                    popupVideoView.pause();
+                }
+            }
+        });
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupVideoView.start();
+            }
+        });
+
+        forwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = popupVideoView.getCurrentPosition();
+                int duration = popupVideoView.getDuration();
+                int forwardTime = 10000; // Avancer de 10 secondes
+                int newPosition = currentPosition + forwardTime;
+
+                if (newPosition > duration) {
+                    newPosition = duration;
+                }
+
+                popupVideoView.seekTo(newPosition);
+            }
+        });
 
        /* if (popupImageView != null) {
             // Load the image dynamically using the imageSourceId from SiteData

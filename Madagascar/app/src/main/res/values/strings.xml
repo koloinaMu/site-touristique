@@ -5,6 +5,8 @@
     <string name="prenom">Votre prénom</string>
     <string name="mail">Votre e-mail</string>
     <string name="mdp">Votre mot de passe</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="apiUrl">http://192.168.88.10:3000/</string>
 
 </resources>

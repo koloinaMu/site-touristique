@@ -1,18 +1,22 @@
 package com.example.madagascar.controleur;
 
-import android.content.DialogInterface;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-
 import com.example.madagascar.MainActivity;
+import com.example.madagascar.R;
+import com.example.madagascar.model.Identification;
 import com.example.madagascar.model.Utilisateur;
-import com.example.madagascar.vue.Accueil;
 import com.example.madagascar.vue.Inscription;
+import com.example.madagascar.vue.Template;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -28,6 +32,19 @@ import okhttp3.Response;
 
 public class UtilisateurControleur {
 
+
+    private DatabaseReference mDatabase;
+    private static final String TAG = "UtilisateurControleur";
+    private Context currentActivity;
+    private String apiUrl ;
+
+    public UtilisateurControleur(Context currentActivity) {
+        this.currentActivity = currentActivity;
+    }
+
+    public UtilisateurControleur() {
+    }
+
     public void login(EditText mailEditText, EditText mdpEditText, MainActivity main){
         String mail=mailEditText.getText().toString();
         String mdp=mdpEditText.getText().toString();
@@ -36,46 +53,56 @@ public class UtilisateurControleur {
         boolean matchFound = matcher.find();
         if(matchFound) {
             Utilisateur user=new Utilisateur(mail,mdp);
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(user);
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .build();
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, jsonStr);
-            Request request = new Request.Builder()
-                    .url("http://10.0.2.2:3000/user/login")
-                    .method("POST", body)
-                    .addHeader("Content-Type", "application/json")
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
+            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(Call call, final Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    }
-
-                    // you code to handle response
-                    String reponse=(response.body().string());
-                    if(reponse.equals("null")){
-                        main.runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(main, "Erreur d'authentification",
-                                        Toast.LENGTH_SHORT).show();
+                public void onComplete(Task<String> task) {
+                    if(task.isComplete()){
+                        String token = task.getResult();
+                        Identification id=new Identification(user,token);
+                        Gson gson = new Gson();
+                        String jsonStr = gson.toJson(id);
+                        OkHttpClient client = new OkHttpClient().newBuilder()
+                                .build();
+                        MediaType mediaType = MediaType.parse("application/json");
+                        RequestBody body = RequestBody.create(mediaType, jsonStr);
+                        String url=apiUrl+"user/login";
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .method("POST", body)
+                                .addHeader("Content-Type", "application/json")
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
                             }
-                        });
-                    }
-                    else{
-                        Intent intent = new Intent(main.getApplicationContext(), Accueil.class);
-                        main.startActivity(intent);
+
+                            @Override
+                            public void onResponse(Call call, final Response response) throws IOException {
+                                if (!response.isSuccessful()) {
+                                    throw new IOException("Unexpected code " + response);
+                                }
+
+                                // you code to handle response
+                                String reponse=(response.body().string());
+                                if(reponse.equals("null")){
+                                    main.runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            Toast.makeText(main, "Erreur d'authentification",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                else{
+                                    Intent intent = new Intent(main.getApplicationContext(), Template.class);
+                                    main.startActivity(intent);
+                                }
+                            }
+                        }
+                        );
                     }
                 }
-            }
-            );
+            });
         } else {
             main.runOnUiThread(new Runnable() {
                 public void run() {
@@ -114,8 +141,9 @@ public class UtilisateurControleur {
             MediaType mediaType = MediaType.parse("application/json");
             //RequestBody body = RequestBody.create(mediaType, "{\r\n    \"mail\":\"kolo@gmail.com\",\r\n    \"mdp\":\"koloina\"\r\n}");
             RequestBody body = RequestBody.create(mediaType, jsonStr);
+            String url=apiUrl+"user/inscription";
             Request request = new Request.Builder()
-                    .url("http://10.0.2.2:3000/user/inscription")
+                    .url(url)
                     .method("POST", body)
                     .addHeader("Content-Type", "application/json")
                     .build();
@@ -134,7 +162,7 @@ public class UtilisateurControleur {
                     // you code to handle response
                     System.out.println(response.code());
                     if(response.code()==200){
-                        Intent intent = new Intent(inscri.getApplicationContext(), Accueil.class);
+                        Intent intent = new Intent(inscri.getApplicationContext(), Template.class);
                         inscri.startActivity(intent);
                     }else{
                         inscri.runOnUiThread(new Runnable() {
@@ -164,5 +192,14 @@ public class UtilisateurControleur {
                 });
             }
         }
+    }
+
+    public Context getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(Context currentActivity) {
+        this.currentActivity = currentActivity;
+        apiUrl= currentActivity.getResources().getString(R.string.apiUrl) ;
     }
 }

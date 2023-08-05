@@ -6,10 +6,11 @@
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/popup_imageView"
-        android:layout_width="150dp"
+        android:id="@+id/popup_imageView_add"
+        android:layout_width="380dp"
         android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/cardview_compat_inset_shadow"
         android:layout_marginBottom="16dp" />
 
     <TextView
@@ -36,16 +37,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="autre image ou video"
-        android:textSize="18sp"
+        android:text="Cliquez ce Vidéos pour voir "
+        android:textSize="20sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/popup_imageView_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
+
 
     <VideoView
         android:id="@+id/popup_videoView"

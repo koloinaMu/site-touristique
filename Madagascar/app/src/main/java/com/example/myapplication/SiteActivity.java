@@ -108,7 +108,7 @@ public class SiteActivity extends AppCompatActivity {
         TextView popupNameTextView = dialog.findViewById(R.id.popup_name_textView);
         TextView popupDescriptionTextView = dialog.findViewById(R.id.popup_description_textView);
         TextView popup_region_textView= dialog.findViewById(R.id.popup_region_textView);
-        ImageView popupImageView = dialog.findViewById(R.id.popup_imageView);
+        //ImageView popupImageView = dialog.findViewById(R.id.popup_imageView);
         VideoView popupVideoView = dialog.findViewById(R.id.popup_videoView);
         ImageView popup_imageView_add = dialog.findViewById(R.id.popup_imageView_add);
 
@@ -123,15 +123,18 @@ public class SiteActivity extends AppCompatActivity {
             popupDescriptionTextView.setText(siteData.getDescription());
         }
         if (popupVideoView != null) {
-            // Set the video URL to the VideoView
-            String videoUrl = siteData.getUrlVideo();
-            Uri videoUri = Uri.parse(videoUrl);
-            popupVideoView.setVideoURI(videoUri);
-            popupVideoView.start();
-
-
+            popupVideoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String videoUrl = siteData.getUrlVideo();
+                    Uri videoUri = Uri.parse(videoUrl);
+                    popupVideoView.setVideoURI(videoUri);
+                    popupVideoView.start();
+                }
+            });
         }
-        if (popupImageView != null) {
+
+       /* if (popupImageView != null) {
             // Load the image dynamically using the imageSourceId from SiteData
             String imageSourceId = siteData.getImagePosteur();
             try {
@@ -141,7 +144,7 @@ public class SiteActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         if (popup_imageView_add != null) {
             // Load the image dynamically using the imageSourceId from SiteData

@@ -1,7 +1,7 @@
 package com.example.madagascar.model;
 
 public class Site {
-   private int id;
+   private String id;
    private String nom;
    private String description;
    private String region;
@@ -12,11 +12,11 @@ public class Site {
    
    private String imagePosteur;
 
-   public int getId() {
+   public String getId() {
       return id;
    }
 
-   public void setId(int id) {
+   public void setId(String id) {
       this.id = id;
    }
 
@@ -84,7 +84,7 @@ public class Site {
       this.urlVideo = urlVideo;
    }
 
-   public Site(int id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
+   public Site(String id, String nom, String description, String region, int idMedia, String urlMedia, String descriptionMedia, String urlVideo) {
       this.id = id;
       this.nom = nom;
       this.description = description;
@@ -126,8 +126,17 @@ public class Site {
    }
 
    @Override
-    public String toString() {
-        return nom;
-        // The ArrayAdapter will use this method to get the string representation for each item in the list
-    }
+   public String toString() {
+      return "Site{" +
+              "id='" + id + '\'' +
+              ", nom='" + nom + '\'' +
+              ", description='" + description + '\'' +
+              ", region='" + region + '\'' +
+              ", idMedia=" + idMedia +
+              ", urlMedia='" + urlMedia + '\'' +
+              ", descriptionMedia='" + descriptionMedia + '\'' +
+              ", urlVideo='" + urlVideo + '\'' +
+              ", imagePosteur='" + imagePosteur + '\'' +
+              '}';
+   }
 }

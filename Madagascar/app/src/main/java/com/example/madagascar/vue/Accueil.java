@@ -40,13 +40,14 @@ public class Accueil extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        listView = getView().findViewById(R.id.listeView);
 
 
         siteDataList = new ArrayList<>();
         adapter = new CustomSiteDataAdapter(getContext(), R.layout.list_item_layout, siteDataList);
 
+        // Inflate the layout for this fragment
+        listView = container.getRootView().findViewById(R.id.listeView);
+        listView=new ListView(getContext());
         listView.setAdapter(adapter);
 
 
@@ -70,6 +71,7 @@ public class Accueil extends Fragment {
                         JSONArray jsonArray = new JSONArray(myresponse);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String id = jsonObject.getString("_id");
                             String siteName = jsonObject.getString("nom");
                             String siteDescription = jsonObject.getString("description");
                             String region = jsonObject.getString("region");
@@ -83,6 +85,7 @@ public class Accueil extends Fragment {
                             String descriptionMedia=mediaObject.getString("descriptionMedia");
                             Site siteData = new Site(siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
                             siteDataList.add(siteData);
+                            System.out.println(siteData);
                         }
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

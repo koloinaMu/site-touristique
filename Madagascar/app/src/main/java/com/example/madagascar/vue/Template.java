@@ -53,6 +53,7 @@ public class Template extends AppCompatActivity implements BottomNavigationView
     }
     Settings sett=new Settings();
     Accueil accueil=new Accueil();
+    SiteFragment site=new SiteFragment();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -67,7 +68,7 @@ public class Template extends AppCompatActivity implements BottomNavigationView
             case R.id.home:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.flFragment, accueil)
+                        .replace(R.id.flFragment, site)
                         .commit();
                 return true;
 

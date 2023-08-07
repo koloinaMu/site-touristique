@@ -1,17 +1,21 @@
 package com.example.madagascar.vue;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.example.madagascar.R;
 import com.example.madagascar.model.Site;
+import com.example.madagascar.vue.placeholder.PlaceholderContent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,32 +31,33 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Accueil extends Fragment {
+/**
+ * A fragment representing a list of Items.
+ */
+public class SiteFragment extends Fragment {
 
-    private ListView listView;
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    View v;
+    SiteAdapter adapter;
+    private RecyclerView recyclerView;
     private List<Site> siteDataList;
-    private CustomSiteDataAdapter adapter;
-    private Template activity;
 
-    public Accueil() {
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public SiteFragment() {
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-
-        View view=inflater.inflate(
-                R.layout.fragment_accueil, container, false);
-        siteDataList = new ArrayList<>();
-        adapter = new CustomSiteDataAdapter(getContext(), R.layout.list_item_layout, siteDataList);
-
-        // Inflate the layout for this fragment
-        listView = view.findViewById(R.id.listeView);
-        listView=new ListView(getContext());
-        listView.setAdapter(adapter);
-
-
+        siteDataList=new ArrayList<Site>();
         OkHttpClient client = new OkHttpClient();
         String apiUrl= getActivity().getResources().getString(R.string.apiUrl) ;
         String url = apiUrl+"sites";
@@ -87,26 +92,35 @@ public class Accueil extends Fragment {
                             String descriptionMedia=mediaObject.getString("descriptionMedia");
                             Site siteData = new Site(id,siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
                             siteDataList.add(siteData);
-                            System.out.println(siteData);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
                         }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((Template)getActivity()).showPopup(siteDataList.get(position));
-            }
-        });
-        return inflater.inflate(R.layout.fragment_accueil, container, false);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        v = inflater.inflate(R.layout.fragment_site_list, container, false);
+
+        recyclerView=v.findViewById(R.id.list);
+        System.out.println(siteDataList);
+        adapter=new SiteAdapter(getContext(),siteDataList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+        return v;
+    }
+
+    private void populateSite(){
+
     }
 }

@@ -104,7 +104,8 @@ public class Site {
       this.urlVideo = urlVideo;
    }
 
-   public Site(String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo, String imagePosteur) {
+   public Site(String id,String nom, String description, String region, String urlMedia, String descriptionMedia, String urlVideo, String imagePosteur) {
+      this.id=id;
       this.nom = nom;
       this.description = description;
       this.region = region;

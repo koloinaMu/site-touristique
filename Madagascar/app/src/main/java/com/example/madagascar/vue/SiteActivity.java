@@ -72,6 +72,7 @@ public class SiteActivity extends AppCompatActivity {
                         JSONArray jsonArray = new JSONArray(myresponse);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String id = jsonObject.getString("_id");
                             String siteName = jsonObject.getString("nom");
                             String siteDescription = jsonObject.getString("description");
                             String region = jsonObject.getString("region");
@@ -83,7 +84,7 @@ public class SiteActivity extends AppCompatActivity {
                             String imageUrlMedia = mediaObject.getString("urlMedia");
                             String urlVideo=mediaObject.getString("urlVideo");
                             String descriptionMedia=mediaObject.getString("descriptionMedia");
-                            Site siteData = new Site(siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
+                            Site siteData = new Site(id,siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
                             siteDataList.add(siteData);
                         }
                         SiteActivity.this.runOnUiThread(new Runnable() {

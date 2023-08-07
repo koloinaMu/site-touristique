@@ -25,6 +25,7 @@ import com.example.madagascar.controleur.UtilisateurControleur;
 import com.example.madagascar.services.MessagingService;
 import com.example.madagascar.services.NotificationService;
 import com.example.madagascar.vue.Inscription;
+import com.example.madagascar.vue.Template;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -54,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
-        setContentView(R.layout.activity_main);
+        String tok=getSharedPreferences("_", MODE_PRIVATE).getString("fcm_token", "empty");
+        System.out.println("TOOOOKKKKKK===="+tok);
+        if(tok=="empty")
+            setContentView(R.layout.activity_main);
+        else{
+            Intent intent = new Intent(getApplicationContext(), Template.class);
+            startActivity(intent);
+        }
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(Task<String> task) {

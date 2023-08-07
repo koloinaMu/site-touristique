@@ -8,6 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,22 +20,25 @@ import com.example.madagascar.vue.placeholder.PlaceholderContent.PlaceholderItem
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> {
+public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> implements Filterable {
 
     Context context;
     List<Site> siteData;
+    private List<Site> fullList;
     Dialog detailSite;
     View v;
 
     public SiteAdapter(Context context, List<Site> siteDate) {
         this.context = context;
         this.siteData = siteDate;
+        this.fullList=new ArrayList<Site>(siteDate);
     }
 
 
@@ -71,6 +76,41 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> {
         return siteData.size();
     }
 
+    public void onRefreshAdapter(List<Site> reports){
+        siteData = reports;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return Searched_Filter;
+    }
+
+    private Filter Searched_Filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Site> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(fullList);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Site item : fullList) {
+                    if (item.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            siteData.clear();
+            siteData.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout linearSite;

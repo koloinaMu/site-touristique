@@ -11,29 +11,48 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.example.madagascar.MainActivity;
 import com.example.madagascar.R;
 import com.example.madagascar.model.Site;
 import com.example.madagascar.services.NotificationService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Template extends AppCompatActivity implements BottomNavigationView
         .OnNavigationItemSelectedListener {
@@ -52,8 +71,8 @@ public class Template extends AppCompatActivity implements BottomNavigationView
         bottomNavigationView.setSelectedItemId(R.id.home);
     }
     Settings sett=new Settings();
-    Accueil accueil=new Accueil();
     SiteFragment site=new SiteFragment();
+    RechercheFragment rechercheFragment=new RechercheFragment();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -71,6 +90,15 @@ public class Template extends AppCompatActivity implements BottomNavigationView
                         .replace(R.id.flFragment, site)
                         .commit();
                 return true;
+
+            case R.id.deconnecter:
+                final SharedPreferences prefs = getSharedPreferences("_", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.remove("fcm_token").apply();
+                editor.commit();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
 
         }
         return false;
@@ -192,5 +220,67 @@ public class Template extends AppCompatActivity implements BottomNavigationView
 
 
         dialog.show();
+    }
+
+    public void rechercher(View view) throws  Exception{
+        EditText rechercheTxt=findViewById(R.id.txtRecherche);
+        System.out.println("IDDD   EDDDIIIITTTT TXT="+R.id.txtRecherche);
+        System.out.println("VIEEWWWW="+view);
+        System.out.println("EDDDIIIITTTT TXT="+rechercheTxt);
+        String txtRecherche=rechercheTxt.getText().toString();
+        OkHttpClient client = new OkHttpClient();
+        String apiUrl= this.getResources().getString(R.string.apiUrl) ;
+        String url = apiUrl+"site/sites/"+txtRecherche;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        List<Site> siteDataList=new ArrayList<Site>();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myresponse = response.body().string();
+                    try {
+                        JSONArray jsonArray = new JSONArray(myresponse);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String id = jsonObject.getString("_id");
+                            String siteName = jsonObject.getString("nom");
+                            String siteDescription = jsonObject.getString("description");
+                            String region = jsonObject.getString("region");
+                            String imagePosteur = jsonObject.getString("imagePosteur");
+                            //atribut dans media
+
+                            JSONArray mediaArray = jsonObject.getJSONArray("media");
+                            JSONObject mediaObject = mediaArray.getJSONObject(0); // Assuming there's only one media object
+                            String imageUrlMedia = mediaObject.getString("urlMedia");
+                            String urlVideo=mediaObject.getString("urlVideo");
+                            String descriptionMedia=mediaObject.getString("descriptionMedia");
+                            Site siteData = new Site(id,siteName, siteDescription,region,imageUrlMedia,descriptionMedia,urlVideo,imagePosteur);
+                            siteDataList.add(siteData);
+                            System.out.println("RECHHHEEERRRCCHHHEEERRR");
+                            System.out.println(siteDataList);
+                            //site.adapter = new SiteAdapter(this, siteDataList);
+                            SiteAdapter siteAdapt=new SiteAdapter(getApplicationContext(), siteDataList);
+                            siteAdapt.onRefreshAdapter(siteDataList);
+                            site.getRecyclerView().setAdapter(siteAdapt);
+                            /*runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    site.adapter.notifyDataSetChanged();
+                                }
+                            });*/
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

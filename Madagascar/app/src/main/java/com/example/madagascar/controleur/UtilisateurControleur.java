@@ -96,6 +96,7 @@ public class UtilisateurControleur {
                                 else{
                                     Intent intent = new Intent(main.getApplicationContext(), Template.class);
                                     main.startActivity(intent);
+                                    main.finish();
                                 }
                             }
                         }
@@ -164,6 +165,7 @@ public class UtilisateurControleur {
                     if(response.code()==200){
                         Intent intent = new Intent(inscri.getApplicationContext(), Template.class);
                         inscri.startActivity(intent);
+                        inscri.finish();
                     }else{
                         inscri.runOnUiThread(new Runnable() {
                             public void run() {
